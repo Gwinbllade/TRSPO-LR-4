@@ -1,0 +1,64 @@
+services:
+  orders:
+    build: ./orders
+    container_name: orders
+    env_file:
+      - ./orders/env_files/dev.env
+    volumes:
+      - ./orders:/code
+    depends_on:
+      - orders_db
+    ports:
+      - 81:80
+  
+  orders_db:
+      image: postgres:16-alpine
+      container_name: orders_db
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+      volumes:
+        - ./orders_db/:/var/lib/postgresql/data
+      ports:
+        - 5440:5432
+
+  users:
+    build: ./users
+    container_name: users
+    env_file:
+      - ./users/env_files/dev.env
+    volumes:
+      - ./users:/code
+    depends_on:
+      - users_db
+    ports:
+      - 82:80
+  
+  users_db:
+      image: postgres:16-alpine
+      container_name: users_db
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+      volumes:
+        - ./users_db/:/var/lib/postgresql/data
+      ports:
+        - 5441:5432
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin@email.com
+      - PGADMIN_DEFAULT_PASSWORD=pgadmin
+      - PGADMIN_LISTEN_PORT=5050
+    depends_on:
+      - orders_db
+      - users_db
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - 5050:5050
+
+volumes:
+  pgadmin:

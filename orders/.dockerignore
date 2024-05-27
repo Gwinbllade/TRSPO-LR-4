@@ -1,0 +1,13 @@
+__pycache__/
+.venv/
+.vscode/
+.mypy_cache/
+.pytest_cache/
+.git/
+
+Dockerfile
+README.MD
+.gitignore
+.dockerignore
+env_files/dev.env
+env_files/test.env
